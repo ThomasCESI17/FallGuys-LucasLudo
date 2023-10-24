@@ -13,7 +13,7 @@ public class PlayerManager : NetworkBehaviour
     protected MovementController _movementController;
     public Camera Camera;
     protected ClassController _currentController;
-    [SerializeField] Menu _mainMenu;
+    [SerializeField] private Menu _mainMenu;
 
     private bool _mainMenuIsDispay = false;
     //public NetworkVariable<bool> isHunter;
@@ -22,6 +22,8 @@ public class PlayerManager : NetworkBehaviour
     public Animator _animator;
     [SerializeField] PropController _propController;
     //[SerializeField] HunterController _hunterController;
+
+    private AlignPlayersOnStartLine _spawnPoint;
 
     private Vector3 lastSpawnPoint;
     private int checkpoint = 0;
@@ -50,6 +52,12 @@ public class PlayerManager : NetworkBehaviour
         }
         if (Camera == null) Camera = GetComponentInChildren<Camera>(true);
     }
+
+    private void Update()
+    {
+        _spawnPoint = FindAnyObjectByType<AlignPlayersOnStartLine>();
+    }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -100,30 +108,24 @@ public class PlayerManager : NetworkBehaviour
         if (_mainMenuIsDispay)
         {
             HideGlobalMenu();
-            _mainMenuIsDispay = false;
         } else
         {
             DisplayGlobalMenu();
-            _mainMenuIsDispay = true;
         }
     }
 
     public void DisplayGlobalMenu()
     {
-        /*bool isLocked = !_movementController.cursorLocked;
-        Cursor.lockState = isLocked ? CursorLockMode.Locked : CursorLockMode.None;
-        _movementController.cursorLocked = isLocked;*/
         ToggleCursorLock();
         _mainMenu.gameObject.SetActive(true);
+        _mainMenuIsDispay = true;
     }
 
     public void HideGlobalMenu()
     {
-        /*bool isLocked = !_movementController.cursorLocked;
-        Cursor.lockState = isLocked ? CursorLockMode.Locked : CursorLockMode.None;
-        _movementController.cursorLocked = isLocked;*/
         ToggleCursorLock();
         _mainMenu.gameObject.SetActive(false);
+        _mainMenuIsDispay = false;
     }
 
     public void CheckPointUpdate(int checkPointNum,Vector3 position)
@@ -154,5 +156,25 @@ public class PlayerManager : NetworkBehaviour
     public int GetActualCheckPoint()
     {
         return checkpoint;
+    }
+
+    public void LauchParty()
+    {
+        if (IsHost)
+        {
+            Debug.Log("Host clicked LaunchButton");
+
+            // Trigger an RPC or network event to start the game on all clients.
+            // Example: MyNetworkedGameController.StartGame();
+
+            // If you have a game controller that starts the game, call it here.
+            NetworkManager.Singleton.SceneManager.LoadScene("Tests", UnityEngine.SceneManagement.LoadSceneMode.Single);
+            PartyManager.LaunchParty();
+        }
+    }
+
+    public void TestSpawn()
+    {
+        _spawnPoint.AlignPlayers();
     }
 }

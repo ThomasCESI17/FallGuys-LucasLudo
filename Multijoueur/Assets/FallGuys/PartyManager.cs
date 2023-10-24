@@ -11,6 +11,7 @@ public class PartyManager : NetworkBehaviour
     private void Start()
     {
         IsPartyStart = false;
+        players = new List<NetworkClient>();
     }
 
     private void Update()

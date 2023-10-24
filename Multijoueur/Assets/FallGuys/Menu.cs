@@ -39,6 +39,7 @@ public class Menu : NetworkBehaviour
 
         // If you have a game controller that starts the game, call it here.
         NetworkManager.Singleton.SceneManager.LoadScene("Tests", UnityEngine.SceneManagement.LoadSceneMode.Single);
+        PartyManager.LaunchParty();
     }
 
     private void ReturnToMainMenu()

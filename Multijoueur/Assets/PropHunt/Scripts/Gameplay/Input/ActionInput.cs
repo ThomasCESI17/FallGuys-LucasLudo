@@ -63,6 +63,16 @@ public class ActionInput : MonoBehaviour
         _playerManager.ActionMenu();
     }
 
+    public void OnPartyLaunch(CallbackContext context)
+    {
+        if (!context.performed) return;
+        _playerManager.LauchParty();
+    }
 
+    public void OnSpawn(CallbackContext context)
+    {
+        if (!context.performed) return;
+        _playerManager.TestSpawn();
+    }
 
 }

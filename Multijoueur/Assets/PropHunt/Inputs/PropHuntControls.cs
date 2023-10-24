@@ -80,6 +80,24 @@ public partial class @SimpleControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LaunchParty"",
+                    ""type"": ""Button"",
+                    ""id"": ""92530122-f06c-4090-9b78-5386082b195d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Spawn"",
+                    ""type"": ""Button"",
+                    ""id"": ""c6115271-bcad-489b-bc48-5968215481fc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -225,6 +243,28 @@ public partial class @SimpleControls: IInputActionCollection2, IDisposable
                     ""action"": ""Menu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dd77bede-d942-4113-bac6-367c019af32d"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LaunchParty"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b48e8c7c-81e1-41fc-860e-f3b19d559d61"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Spawn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -239,6 +279,8 @@ public partial class @SimpleControls: IInputActionCollection2, IDisposable
         m_gameplay_TriggerMenu = m_gameplay.FindAction("TriggerMenu", throwIfNotFound: true);
         m_gameplay_UnlockCursor = m_gameplay.FindAction("UnlockCursor", throwIfNotFound: true);
         m_gameplay_Menu = m_gameplay.FindAction("Menu", throwIfNotFound: true);
+        m_gameplay_LaunchParty = m_gameplay.FindAction("LaunchParty", throwIfNotFound: true);
+        m_gameplay_Spawn = m_gameplay.FindAction("Spawn", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -306,6 +348,8 @@ public partial class @SimpleControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_gameplay_TriggerMenu;
     private readonly InputAction m_gameplay_UnlockCursor;
     private readonly InputAction m_gameplay_Menu;
+    private readonly InputAction m_gameplay_LaunchParty;
+    private readonly InputAction m_gameplay_Spawn;
     public struct GameplayActions
     {
         private @SimpleControls m_Wrapper;
@@ -316,6 +360,8 @@ public partial class @SimpleControls: IInputActionCollection2, IDisposable
         public InputAction @TriggerMenu => m_Wrapper.m_gameplay_TriggerMenu;
         public InputAction @UnlockCursor => m_Wrapper.m_gameplay_UnlockCursor;
         public InputAction @Menu => m_Wrapper.m_gameplay_Menu;
+        public InputAction @LaunchParty => m_Wrapper.m_gameplay_LaunchParty;
+        public InputAction @Spawn => m_Wrapper.m_gameplay_Spawn;
         public InputActionMap Get() { return m_Wrapper.m_gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -343,6 +389,12 @@ public partial class @SimpleControls: IInputActionCollection2, IDisposable
             @Menu.started += instance.OnMenu;
             @Menu.performed += instance.OnMenu;
             @Menu.canceled += instance.OnMenu;
+            @LaunchParty.started += instance.OnLaunchParty;
+            @LaunchParty.performed += instance.OnLaunchParty;
+            @LaunchParty.canceled += instance.OnLaunchParty;
+            @Spawn.started += instance.OnSpawn;
+            @Spawn.performed += instance.OnSpawn;
+            @Spawn.canceled += instance.OnSpawn;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -365,6 +417,12 @@ public partial class @SimpleControls: IInputActionCollection2, IDisposable
             @Menu.started -= instance.OnMenu;
             @Menu.performed -= instance.OnMenu;
             @Menu.canceled -= instance.OnMenu;
+            @LaunchParty.started -= instance.OnLaunchParty;
+            @LaunchParty.performed -= instance.OnLaunchParty;
+            @LaunchParty.canceled -= instance.OnLaunchParty;
+            @Spawn.started -= instance.OnSpawn;
+            @Spawn.performed -= instance.OnSpawn;
+            @Spawn.canceled -= instance.OnSpawn;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -390,5 +448,7 @@ public partial class @SimpleControls: IInputActionCollection2, IDisposable
         void OnTriggerMenu(InputAction.CallbackContext context);
         void OnUnlockCursor(InputAction.CallbackContext context);
         void OnMenu(InputAction.CallbackContext context);
+        void OnLaunchParty(InputAction.CallbackContext context);
+        void OnSpawn(InputAction.CallbackContext context);
     }
 }

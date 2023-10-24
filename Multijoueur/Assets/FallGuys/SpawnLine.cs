@@ -1,30 +1,60 @@
-using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class SpawnLine : MonoBehaviour
+
+public class AlignPlayersOnStartLine : NetworkBehaviour
 {
     public Transform startLine; // La position de la ligne de départ
     public float spacing = 2.0f; // Espacement entre les joueurs
+    private bool IsOnLignSpawned = false;
 
-    /*void Start()
+    private GameObject _host;
+    private GameObject _client;
+
+    private void Start()
+    {
+        IsOnLignSpawned = false;
+    }
+
+    public void AlignPlayers()
+    {
+        if (PartyManager.GetPartyState() && !IsOnLignSpawned)
+        {
+            AlignPlayersOnStartLineServerRpc();
+        }
+    }
+
+    [ServerRpc]
+    public void AlignPlayersOnStartLineServerRpc()
     {
         // Recherchez tous les joueurs dans la scène
-        Player[] players = FindObjectsOfType<Player>();
+        List<NetworkClient> players = PartyManager.GetListOfPlayer();
+
+        List<ulong> listClientId = new List<ulong>();
 
         // Placez chaque joueur le long de la ligne de départ
-        int numPlayers = players.Length;
+        int numPlayers = players.Count;
 
-        // Calculez la position du premier joueur
-        Vector3 startLineCenter = startLine.position;
-        Vector3 startPlayerPosition = startLineCenter - startLine.forward * (spacing * (numPlayers - 1) / 2.0f);
+        // Calculez la longueur totale de la ligne
+        float lineLength = spacing * (numPlayers - 1);
 
-        for (int i = 0; i < numPlayers; i++)
+        // Calculez la position de départ au milieu de la ligne
+        Vector3 startPlayerPosition = startLine.position - startLine.forward * (lineLength / 2.0f);
+
+        startPlayerPosition = new Vector3(startPlayerPosition.x, 3, startPlayerPosition.z);
+
+        foreach (NetworkClient player in players)
         {
-            Transform playerTransform = players[i].transform;
+            int i = 0;
             Vector3 playerPosition = startPlayerPosition + startLine.forward * (spacing * i);
-            playerTransform.position = playerPosition;
-        }
-    }*/
-}
 
+            player.PlayerObject.gameObject.transform.position = playerPosition;
+            player.PlayerObject.transform.position = playerPosition;
+            i++;
+        }
+        IsOnLignSpawned = true;
+
+    }
+        
+}
