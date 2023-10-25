@@ -448,6 +448,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Camera: {fileID: 975355187133314096}
   _mainMenu: {fileID: 7912201316309623155}
+  _textMesh: {fileID: 2918997005308373508}
   _actionInput: {fileID: 692639510424477173}
   _animator: {fileID: 3368582605109044104}
   _propController: {fileID: 1053087324449554579}
@@ -821,8 +822,8 @@ RectTransform:
   m_Father: {fileID: 5310152733477479250}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0, y: 1}

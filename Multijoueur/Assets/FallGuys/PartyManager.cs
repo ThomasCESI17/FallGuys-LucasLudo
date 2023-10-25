@@ -7,6 +7,8 @@ public class PartyManager : NetworkBehaviour
 {
     private static bool IsPartyStart { get; set; }
     private static List<NetworkClient> players;
+    private List<NetworkClient> ranking;
+    private List<NetworkClient> noRanking;
 
     private void Start()
     {

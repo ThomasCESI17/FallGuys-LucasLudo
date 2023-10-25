@@ -2,6 +2,7 @@ using PropHunt.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,6 +15,8 @@ public class PlayerManager : NetworkBehaviour
     public Camera Camera;
     protected ClassController _currentController;
     [SerializeField] private Menu _mainMenu;
+
+    public TextMeshProUGUI _textMesh;
 
     private bool _mainMenuIsDispay = false;
     //public NetworkVariable<bool> isHunter;
@@ -106,9 +109,12 @@ public class PlayerManager : NetworkBehaviour
         checkpoint = checkPointNum;
     }
 
-    public void SpawnPoint(Vector3 _spawnPoint)
+    [ClientRpc]
+    public void SpawnPointClientRPC(Vector3 _spawnPoint)
     {
         transform.position = _spawnPoint;
+        lastSpawnPoint = _spawnPoint;
+        transform.rotation = Quaternion.identity;
     }
 
     public void Respawn()
@@ -149,8 +155,4 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    public void TestSpawn()
-    {
-        //_spawnPoint.AlignPlayers();
-    }
 }
