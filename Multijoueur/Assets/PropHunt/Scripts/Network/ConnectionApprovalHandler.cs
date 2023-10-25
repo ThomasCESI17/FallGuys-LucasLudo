@@ -44,7 +44,7 @@ public class ConnectionApprovalHandler : MonoBehaviour
         response.Approved = isApproved;
         response.CreatePlayerObject = isApproved;
         // Position de départ
-        response.Position = new Vector3(0, 3, 0);
+        // response.Position = new Vector3(0, 3, 0);
     }
 
 

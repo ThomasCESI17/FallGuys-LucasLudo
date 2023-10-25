@@ -7,7 +7,7 @@ public class TeleportPlayers : MonoBehaviour
     public Transform platform; // La plateforme sur laquelle vous souhaitez téléporter les joueurs
     public float teleportRadius = 5.0f; // Rayon autour de la plateforme où les joueurs peuvent être téléportés
     public List<NetworkClient> players; // Liste des joueurs que vous souhaitez téléporter
-    private PlayerListManager playerListManager;
+    //private PlayerListManager playerListManager;
 
     public void StartTeleportation()
     {

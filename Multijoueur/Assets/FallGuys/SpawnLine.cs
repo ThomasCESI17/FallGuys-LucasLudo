@@ -1,60 +1,100 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
 
 public class AlignPlayersOnStartLine : NetworkBehaviour
 {
-    public Transform startLine; // La position de la ligne de départ
-    public float spacing = 2.0f; // Espacement entre les joueurs
     private bool IsOnLignSpawned = false;
 
-    private GameObject _host;
-    private GameObject _client;
+    public float timeRemaining = 10;
+    public TextMeshProUGUI timerText;
+    private List<SpawnLinePosition> spawnPositions = new List<SpawnLinePosition>();
+    List<PlayerManager> playerManagers = new List<PlayerManager>();
+
 
     private void Start()
-    {
+    {     
+        spawnPositions = GetComponentsInChildren<SpawnLinePosition>().ToList();
         IsOnLignSpawned = false;
     }
 
-    public void AlignPlayers()
+    private void Update()
+    {
+        if (!IsOnLignSpawned)
+        {
+            StartCoroutine(AlignPlayers());
+        }
+    }
+    
+    public IEnumerator AlignPlayers()
     {
         if (PartyManager.GetPartyState() && !IsOnLignSpawned)
         {
-            AlignPlayersOnStartLineServerRpc();
+            List<NetworkClient> networkClients = PartyManager.GetListOfPlayer();
+            Debug.Log(networkClients.Count);
+            foreach (NetworkClient p in networkClients)
+            {
+                playerManagers.Add(p.PlayerObject.GetComponent<PlayerManager>());
+            }
+            TeleportPlayersToLignClientRPC();
+            playerManagers.Clear();
+            IsOnLignSpawned = true;
+            yield return new WaitForSeconds(1); // Optional delay before starting countdown.
+            StartCoroutine(Countdown());
         }
     }
-
-    [ServerRpc]
-    public void AlignPlayersOnStartLineServerRpc()
+    /*
+    [ClientRpc]
+    public void AlignPlayersOnLineClientRpc()
     {
-        // Recherchez tous les joueurs dans la scène
-        List<NetworkClient> players = PartyManager.GetListOfPlayer();
 
-        List<ulong> listClientId = new List<ulong>();
+    }*/
 
-        // Placez chaque joueur le long de la ligne de départ
-        int numPlayers = players.Count;
+    private IEnumerator Countdown()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        timerText.gameObject.SetActive(true);
 
-        // Calculez la longueur totale de la ligne
-        float lineLength = spacing * (numPlayers - 1);
+        float remainingTime = timeRemaining;
 
-        // Calculez la position de départ au milieu de la ligne
-        Vector3 startPlayerPosition = startLine.position - startLine.forward * (lineLength / 2.0f);
-
-        startPlayerPosition = new Vector3(startPlayerPosition.x, 3, startPlayerPosition.z);
-
-        foreach (NetworkClient player in players)
+        foreach (GameObject player in players)
         {
-            int i = 0;
-            Vector3 playerPosition = startPlayerPosition + startLine.forward * (spacing * i);
-
-            player.PlayerObject.gameObject.transform.position = playerPosition;
-            player.PlayerObject.transform.position = playerPosition;
-            i++;
+            player.SetActive(false);
         }
-        IsOnLignSpawned = true;
+
+        while (remainingTime > 0)
+        {
+            timerText.text = "Temps restant : " + remainingTime.ToString("F1");
+            yield return null;
+            remainingTime = timeRemaining - Time.time;
+        }
+        
+
+        timerText.gameObject.SetActive(false);
+        foreach (GameObject player in players)
+        {
+            player.SetActive(true);
+        }
 
     }
-        
+
+    [ClientRpc]
+    public void TeleportPlayersToLignClientRPC()
+    {
+        Debug.Log(playerManagers.Count);
+        for (int i = 0; i < playerManagers.Count; i++)
+        {
+            playerManagers[i].SpawnPoint(spawnPositions[i].transform.position);
+        }
+    }
+
+
+    private void ShowTimer()
+    {
+        StartCoroutine(Countdown());
+    }
 }

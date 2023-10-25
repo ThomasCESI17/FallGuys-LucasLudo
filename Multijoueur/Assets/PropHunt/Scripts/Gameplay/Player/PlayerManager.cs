@@ -25,6 +25,7 @@ public class PlayerManager : NetworkBehaviour
 
     private AlignPlayersOnStartLine _spawnPoint;
 
+    private Vector3 _spawnPointPosition;
     private Vector3 lastSpawnPoint;
     private int checkpoint = 0;
 
@@ -36,16 +37,9 @@ public class PlayerManager : NetworkBehaviour
         _propController = GetComponentInChildren<PropController>();
         _movementController.ClassController = _propController;
         _actionInput.SetClassInput(_propController.ClassInput);
-        //_propController.Activate();
-        /*isHunter.OnValueChanged += SwapTeam;
-        if (_propController == null)
-        {
-            *//*
-        }
-        if(_hunterController == null)
-        {
-            _hunterController = GetComponentInChildren<HunterController>();
-        }*/
+
+        _spawnPointPosition = Vector3.zero;
+
         if (_actionInput == null)
         {
             _actionInput = GetComponent<ActionInput>();
@@ -61,7 +55,7 @@ public class PlayerManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        //SwapTeam(true, false);
+        transform.position = new Vector3(0, 100f, 0);
         if (IsOwner)
         {
             GetComponent<PlayerInput>().enabled = true;
@@ -70,31 +64,9 @@ public class PlayerManager : NetworkBehaviour
             Camera.gameObject.SetActive(true);
             _movementController.SetAnimator(GetComponent<Animator>());
             return;
-        }
+        }        
         Camera.gameObject.SetActive(false);
     }
-
-    /*[ServerRpc]
-    public void SwapTeamServerRPC()
-    {
-        isHunter.Value = !isHunter.Value;
-    }
-
-    public void SwapTeam(bool previousIsHunterValue, bool newIsHunterValue)
-    {
-        if (newIsHunterValue)
-        {
-            _movementController.ClassController = _hunterController;
-            _actionInput.SetClassInput(_hunterController.ClassInput);
-            _propController.Deactivate();
-            _hunterController.Activate();
-            return;
-        }
-        _movementController.ClassController = _propController;
-        _actionInput.SetClassInput(_propController.ClassInput);
-        _hunterController.Deactivate();
-        _propController.Activate();
-    }*/
 
     public void ToggleCursorLock()
     {
@@ -134,12 +106,16 @@ public class PlayerManager : NetworkBehaviour
         checkpoint = checkPointNum;
     }
 
+    public void SpawnPoint(Vector3 _spawnPoint)
+    {
+        transform.position = _spawnPoint;
+    }
+
     public void Respawn()
     {
         transform.position = lastSpawnPoint;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-
     }
 
     public void ActivateCollider()
@@ -175,6 +151,6 @@ public class PlayerManager : NetworkBehaviour
 
     public void TestSpawn()
     {
-        _spawnPoint.AlignPlayers();
+        //_spawnPoint.AlignPlayers();
     }
 }

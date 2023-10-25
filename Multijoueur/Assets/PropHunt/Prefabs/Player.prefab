@@ -382,12 +382,12 @@ MonoBehaviour:
   PositionThreshold: 0.0001
   RotAngleThreshold: 0.00001
   ScaleThreshold: 0.001
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
+  UseQuaternionSynchronization: 1
+  UseQuaternionCompression: 1
   UseHalfFloatPrecision: 0
   InLocalSpace: 0
   Interpolate: 0
-  SlerpPosition: 0
+  SlerpPosition: 1
 --- !u!114 &2644040128657028773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -403,7 +403,6 @@ MonoBehaviour:
   CameraTransform: {fileID: 0}
   runSpeed: 10
   rotateSpeed: 10
-  projectile: {fileID: 1050929111787496, guid: 4be9e6cdd2d5d499ca5c16cc83fdf790, type: 3}
   cursorLocked: 1
   _jumpForce: 5
   Grounded: 1

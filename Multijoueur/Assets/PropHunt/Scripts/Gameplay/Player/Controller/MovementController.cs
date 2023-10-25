@@ -8,7 +8,6 @@ public class MovementController : MonoBehaviour
 
     public float runSpeed;
     public float rotateSpeed;
-    public GameObject projectile;
     public bool cursorLocked = true;
     ActionInput _actionInput;
 
