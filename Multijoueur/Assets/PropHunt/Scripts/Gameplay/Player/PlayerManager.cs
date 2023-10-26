@@ -43,7 +43,6 @@ public class PlayerManager : NetworkBehaviour
         _propController = GetComponentInChildren<PropController>();
         _movementController.ClassController = _propController;
         _actionInput.SetClassInput(_propController.ClassInput);
-        _textMesh.text = _playerName;
 
         //OnNetworkSpawn();
 
@@ -68,6 +67,7 @@ public class PlayerManager : NetworkBehaviour
             _movementController.enabled = true;
             Camera.gameObject.SetActive(true);
             _movementController.SetAnimator(GetComponent<Animator>());
+            _textMesh.text = _playerName;
             return;
         }        
         Camera.gameObject.SetActive(false);
