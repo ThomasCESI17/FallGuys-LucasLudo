@@ -10,8 +10,6 @@ using UnityEngine.InputSystem;
 public class PlayerManager : NetworkBehaviour
 {
     private string _playerName;
-    private Collider _playerCollider;
-    private LayerMask _excludeLayer;
     protected MovementController _movementController;
     public Camera Camera;
     protected ClassController _currentController;
@@ -37,8 +35,6 @@ public class PlayerManager : NetworkBehaviour
     private void Awake()
     {
         _playerName = "Player" + (PartyManager.GetListOfPlayer().Count + 1).ToString();
-        _playerCollider = GetComponentInChildren<Collider>();
-        _excludeLayer = LayerMask.NameToLayer("Player");
         _movementController = GetComponent<MovementController>();
         _propController = GetComponentInChildren<PropController>();
         _movementController.ClassController = _propController;
@@ -133,17 +129,6 @@ public class PlayerManager : NetworkBehaviour
         transform.position = lastSpawnPoint;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-    }
-
-    public void ActivateCollider()
-    {
-        _playerCollider.excludeLayers = new LayerMask();
-    }
-
-    public void DeactivateCollider()
-    {
-        _playerCollider.excludeLayers = _excludeLayer;
-        
     }
 
     public int GetActualCheckPoint()

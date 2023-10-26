@@ -1,14 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
-using UnityEngine;
 
 public class PartyManager : NetworkBehaviour
 {
     private static bool IsPartyStart { get; set; }
     private static List<NetworkClient> players;
-    private List<NetworkClient> ranking;
-    private List<NetworkClient> noRanking;
 
     private void Start()
     {
@@ -47,10 +44,6 @@ public class PartyManager : NetworkBehaviour
 
     public static void LaunchParty()
     {
-        foreach (NetworkClient player in players)
-        {
-            player.PlayerObject.GetComponent<PlayerManager>().ActivateCollider();
-        }
         IsPartyStart = true;
     }
 }
