@@ -33,6 +33,7 @@ public class PlayerManager : NetworkBehaviour
     private Vector3 lastSpawnPoint;
     private int checkpoint = 0;
 
+
     private void Awake()
     {
         _playerName = "Player" + (PartyManager.GetListOfPlayer().Count + 1).ToString();
@@ -42,6 +43,7 @@ public class PlayerManager : NetworkBehaviour
         _propController = GetComponentInChildren<PropController>();
         _movementController.ClassController = _propController;
         _actionInput.SetClassInput(_propController.ClassInput);
+        _textMesh.text = _playerName;
 
         //OnNetworkSpawn();
 
