@@ -1,15 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
+using System.Linq;
+using System.Threading;
+using Unity.Netcode;
 using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
     protected Collider teleportArea; // Collider de la zone de téléportation
     public int checkpointId;
+    private GameObject checkpointLight;
+    public Material checkpointMaterial;
+    Color colorStart = Color.green;
+    Color colorCheck = Color.cyan;
 
     private void Start()
     {
+        checkpointLight = GetComponentInChildren<CheckpointValidated>().gameObject;
+        checkpointLight.GetComponentInChildren<Renderer>().material.color = colorStart;
         teleportArea = GetComponent<Collider>();
     }
 
@@ -20,6 +28,14 @@ public class Checkpoint : MonoBehaviour
         {
             player.CheckPointUpdate(checkpointId, RandomSpawnPoints());
         }
+        checkpointLight.GetComponentInChildren<Renderer>().material.color = colorCheck;
+        StartCoroutine(CheckPointTimer());
+    }
+
+    private IEnumerator CheckPointTimer()
+    {
+        yield return new WaitForSecondsRealtime(0.5f);
+        checkpointLight.GetComponentInChildren<Renderer>().material.color = colorStart;
     }
 
     Vector3 RandomSpawnPoints()
@@ -37,7 +53,7 @@ public class Checkpoint : MonoBehaviour
     {
         Vector3 teleportPosition = new Vector3(
             Random.Range(teleportArea.bounds.min.x, teleportArea.bounds.max.x),
-            transform.position.y,
+            0,
             Random.Range(teleportArea.bounds.min.z, teleportArea.bounds.max.z)
         );
         return teleportPosition;
@@ -47,5 +63,10 @@ public class Checkpoint : MonoBehaviour
     {
         // Vérifiez si la position est à l'intérieur du collider de la zone de téléportation
         return teleportArea.bounds.Contains(position);
+    }
+
+    public int GetCheckPointID()
+    {
+        return checkpointId;
     }
 }

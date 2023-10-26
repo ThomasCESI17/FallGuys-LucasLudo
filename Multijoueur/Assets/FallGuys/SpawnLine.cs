@@ -50,6 +50,7 @@ public class AlignPlayersOnStartLine : NetworkBehaviour
                 foreach (NetworkClient networkClient in networkClients)
                 {
                     networkClient.PlayerObject.GetComponent<MovementController>().enabled = false;
+                    networkClient.PlayerObject.transform.eulerAngles = new Vector3(0, 0, 0);
                 }
                 IsPlayerFreeze = true;
             }
@@ -65,7 +66,7 @@ public class AlignPlayersOnStartLine : NetworkBehaviour
                 {
                     foreach (NetworkClient networkClient in networkClients)
                     {
-                        networkClient.PlayerObject.GetComponent<MovementController>().enabled = true;
+                        networkClient.PlayerObject.GetComponent<PlayerManager>().UnFreezeAnimationClientRPC();
                     }
                     timerText.text = "";
                     IsPlayerFreeze = true;
@@ -86,6 +87,7 @@ public class AlignPlayersOnStartLine : NetworkBehaviour
     {
         if (PartyManager.GetPartyState() && !IsOnLignSpawned)
         {
+            timerText.text = "Are you ready?";
             List<NetworkClient> networkClients = PartyManager.GetListOfPlayer();
             foreach (NetworkClient p in networkClients)
             {
@@ -103,10 +105,10 @@ public class AlignPlayersOnStartLine : NetworkBehaviour
     //[ServerRpc]
     public void TeleportPlayersToLign()
     {
-        Debug.Log(playerManagers.Count);
         for (int i = 0; i < playerManagers.Count; i++)
         {
-            playerManagers[i].SpawnPointClientRPC(spawnPositions[i].transform.position);
+            playerManagers[i].SpawnPointClientRPC(spawnPositions[i].transform.position, true);
+            playerManagers[i].FreezeAnimationClientRPC();
         }
     }
 }

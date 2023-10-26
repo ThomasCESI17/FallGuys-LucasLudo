@@ -285,4 +285,17 @@ public class MovementController : MonoBehaviour
        //     // MTT CHANGE END
        // }
     }
+
+        public void BlockMoveAnimator()
+    {
+        if (_animator != null)
+        {
+            _animator.SetFloat(_animIDSpeed, 0f);
+            _animator.SetFloat(_animIDMotionSpeed, 1f);
+            _animator.SetBool(_animIDJump, false);
+            _animator.SetBool(_animIDFreeFall, false);
+            _animator.SetBool(_animIDGrounded, true);
+        }
+    }
+
 }

@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerManager : NetworkBehaviour
 {
+    private string _playerName;
     private Collider _playerCollider;
     private LayerMask _excludeLayer;
     protected MovementController _movementController;
@@ -34,12 +35,15 @@ public class PlayerManager : NetworkBehaviour
 
     private void Awake()
     {
+        _playerName = "Player" + (PartyManager.GetListOfPlayer().Count + 1).ToString();
         _playerCollider = GetComponentInChildren<Collider>();
         _excludeLayer = LayerMask.NameToLayer("Player");
         _movementController = GetComponent<MovementController>();
         _propController = GetComponentInChildren<PropController>();
         _movementController.ClassController = _propController;
         _actionInput.SetClassInput(_propController.ClassInput);
+
+        //OnNetworkSpawn();
 
         _spawnPointPosition = Vector3.zero;
 
@@ -50,14 +54,10 @@ public class PlayerManager : NetworkBehaviour
         if (Camera == null) Camera = GetComponentInChildren<Camera>(true);
     }
 
-    private void Update()
-    {
-        _spawnPoint = FindAnyObjectByType<AlignPlayersOnStartLine>();
-    }
-
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        Debug.Log("test");
         transform.position = new Vector3(0, 100f, 0);
         if (IsOwner)
         {
@@ -110,11 +110,20 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void SpawnPointClientRPC(Vector3 _spawnPoint)
+    public void SpawnPointClientRPC(Vector3 _spawnPoint, bool IsStartPosition)
     {
+        _movementController.BlockMoveAnimator();
+        _movementController.enabled = false;
+        if (IsStartPosition)
+        {
+            transform.eulerAngles = new Vector3(0, 0, 0);
+        }
+        else
+        {
+            transform.eulerAngles = new Vector3(0, 180, 0);
+        }
         transform.position = _spawnPoint;
         lastSpawnPoint = _spawnPoint;
-        transform.rotation = Quaternion.identity;
     }
 
     public void Respawn()
@@ -150,9 +159,34 @@ public class PlayerManager : NetworkBehaviour
             // Example: MyNetworkedGameController.StartGame();
 
             // If you have a game controller that starts the game, call it here.
-            NetworkManager.Singleton.SceneManager.LoadScene("Tests", UnityEngine.SceneManagement.LoadSceneMode.Single);
+
+            //NetworkManager.Singleton.SceneManager.LoadScene("Tests", UnityEngine.SceneManagement.LoadSceneMode.Single);
             PartyManager.LaunchParty();
         }
     }
+
+    [ClientRpc]
+    public void UpdateRankingClientRPC(string text)
+    {
+        _textMesh.text = text;
+    }
+
+    public string GetPlayerName()
+    {
+        return _playerName;
+    }
+
+    [ClientRpc]
+    public void FreezeAnimationClientRPC()
+    {
+        _movementController.enabled = false;
+    }
+
+    [ClientRpc]
+    public void UnFreezeAnimationClientRPC()
+    {
+        _movementController.enabled = true;
+    }
+
 
 }

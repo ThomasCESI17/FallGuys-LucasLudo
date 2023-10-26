@@ -47,7 +47,7 @@ namespace PropHunt.UI
             var result = NetworkManager.Singleton.StartHost();
             if (result)
             {
-                NetworkManager.Singleton.SceneManager.LoadScene("Lobby", UnityEngine.SceneManagement.LoadSceneMode.Single);
+                NetworkManager.Singleton.SceneManager.LoadScene("Tests", UnityEngine.SceneManagement.LoadSceneMode.Single);
                 return;
             }
         }
