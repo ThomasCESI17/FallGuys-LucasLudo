@@ -54,7 +54,7 @@ public class PlayerManager : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         Debug.Log("test");
-        transform.position = new Vector3(0, 55f, 0);
+        transform.position = new Vector3(0, -15f, 0);
         if (IsOwner)
         {
             GetComponent<PlayerInput>().enabled = true;
