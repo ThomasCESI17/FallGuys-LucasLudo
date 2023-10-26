@@ -31,7 +31,6 @@ public class PlayerManager : NetworkBehaviour
     private Vector3 lastSpawnPoint;
     private int checkpoint = 0;
 
-
     private void Awake()
     {
         _playerName = "Player" + (PartyManager.GetListOfPlayer().Count + 1).ToString();
@@ -55,7 +54,7 @@ public class PlayerManager : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         Debug.Log("test");
-        transform.position = new Vector3(0, 100f, 0);
+        transform.position = new Vector3(0, 55f, 0);
         if (IsOwner)
         {
             GetComponent<PlayerInput>().enabled = true;
@@ -63,7 +62,6 @@ public class PlayerManager : NetworkBehaviour
             _movementController.enabled = true;
             Camera.gameObject.SetActive(true);
             _movementController.SetAnimator(GetComponent<Animator>());
-            _textMesh.text = _playerName;
             return;
         }        
         Camera.gameObject.SetActive(false);
