@@ -1,23 +1,22 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class BumpingBetweenPlayer : MonoBehaviour
+public class BumpingBetweenPlayer : NetworkBehaviour
 {
-    public float bumpForce = 10.0f; // Adjust the bump force as needed
+    public float bumpForce = 100.0f; // Adjust the bump force as needed
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // Get the CharacterController component of the player
-            CharacterController characterController = collision.gameObject.GetComponent<CharacterController>();
+            // Get the Rigidbody of the player
+            Rigidbody playerRigidbody = collision.gameObject.GetComponentInParent<Rigidbody>();
 
-            if (characterController != null)
+            if (playerRigidbody != null)
             {
-                // Calculate the bump direction
+                // Apply a bump force to the player in the opposite direction of the collision
                 Vector3 bumpDirection = (collision.contacts[0].point - transform.position).normalized;
-
-                // Apply the bump force to the player using the CharacterController
-                characterController.Move(bumpDirection * bumpForce * Time.deltaTime);
+                playerRigidbody.AddForce(bumpDirection * bumpForce, ForceMode.Impulse);
             }
         }
     }
