@@ -171,8 +171,8 @@ public class MovementController : MonoBehaviour
         var scaledRotateSpeed = rotateSpeed * Time.deltaTime;
         m_Rotation.y += look.x * scaledRotateSpeed;
         //m_Rotation.x -= look.y * scaledRotateSpeed;
-        m_Rotation.x = Mathf.Clamp(m_Rotation.x, BottomClamp, TopClamp);
-        CameraTransform.localEulerAngles = new Vector3(m_Rotation.x, CameraTransform.localEulerAngles.y, CameraTransform.localEulerAngles.z);
+        //m_Rotation.x = Mathf.Clamp(m_Rotation.x, BottomClamp, TopClamp);
+        //CameraTransform.localEulerAngles = new Vector3(m_Rotation.x, CameraTransform.localEulerAngles.y, CameraTransform.localEulerAngles.z);
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, m_Rotation.y, transform.localEulerAngles.z);
     }
 
